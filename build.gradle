@@ -1,0 +1,55 @@
+plugins {
+    id 'com.gradleup.shadow' version '8.3.3'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.6.0'
+    id 'java'
+}
+
+group = 'dev.scarday'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "https://storehouse.okaeri.eu/repository/maven-public/" }
+    maven { url "https://repo.panda-lang.org/releases" }
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven { url "https://oss.sonatype.org/content/groups/public/" }
+}
+
+dependencies {
+    // --- Okaeri-configs ---
+    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:5.0.5")
+    implementation("eu.okaeri:okaeri-configs-serdes-bukkit:5.0.5")
+
+    // --- MiniMessage --- (1.16.5)
+    implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.1.0-SNAPSHOT")
+
+    // --- Commands ---
+    implementation("dev.rollczi:litecommands-bukkit:3.6.1")
+
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    compileOnly "com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT"
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.add("-parameters")
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+bukkit {
+    main = "dev.scarday.plugin.Items"
+    authors = ["ScarDay"]
+    apiVersion = "1.16"
+}
